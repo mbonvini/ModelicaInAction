@@ -1,7 +1,6 @@
 # Author: Marco Bonvini
 # email: bonvini.m@gmail.com
 #
-
 FROM ubuntu:16.04
 
 MAINTAINER MarcoBonvini bonvini.m@gmail.com
@@ -112,9 +111,17 @@ ENV LD_LIBRARY_PATH :/home/docker/installed/Ipopt/lib/:\
 /home/docker/installed/JModelica/ThirdParty/Sundials/lib:\
 /home/docker/installed/JModelica/ThirdParty/CasADi/lib
 ENV SEPARATE_PROCESS_JVM /usr/lib/jvm/java-8-openjdk-amd64/
+ENV MODELICAPATH /home/docker/installed/JModelica/ThirdParty/MSL:/home/docker/modelica
+
+# ============ Expose ports ============================================================
+EXPOSE 8888
+
+# ============ Install IPython notebook ================================================
+RUN apt-get install -y ipython ipython-notebook
 
 # ============ Set some environmental vars and change user =============================
 USER docker
+RUN mkdir /home/docker/modelica && mkdir /home/docker/ipynotebooks
 ENV USER docker
 ENV DISPLAY :0.0
 WORKDIR /home/docker/
