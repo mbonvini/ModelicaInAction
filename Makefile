@@ -3,7 +3,7 @@ all:	help
 build: ## Creates an image based using the Dockerfile.
 	docker build ./docker/ -t jmodelica:1.0
 
-run: ## Starts the container and attaches a terminal to it.
+run: ## Starts the container in detached mode and runs an ipython notebook in it.
 	docker run -d -v $(shell pwd)/modelica:/home/docker/modelica \
 	-v $(shell pwd)/ipynotebooks:/home/docker/ipynotebooks \
 	-p 127.0.0.1:8888:8888 jmodelica:1.0 \
