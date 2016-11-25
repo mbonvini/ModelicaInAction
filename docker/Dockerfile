@@ -106,8 +106,8 @@ ENV JMODELICA_HOME /home/docker/installed/JModelica
 ENV IPOPT_HOME /home/docker/installed/Ipopt
 ENV CPPAD_HOME /home/docker/installed/JModelica/ThirdParty/CppAD/
 ENV SUNDIALS_HOME /home/docker/installed/JModelica/ThirdParty/Sundials
-ENV PYTHONPATH :/home/docker/installed/JModelica/Python/:
-ENV LD_LIBRARY_PATH :/home/docker/installed/Ipopt/lib/:\
+ENV PYTHONPATH /home/docker/installed/JModelica/Python/:
+ENV LD_LIBRARY_PATH /home/docker/installed/Ipopt/lib/:\
 /home/docker/installed/JModelica/ThirdParty/Sundials/lib:\
 /home/docker/installed/JModelica/ThirdParty/CasADi/lib
 ENV SEPARATE_PROCESS_JVM /usr/lib/jvm/java-8-openjdk-amd64/
@@ -118,6 +118,10 @@ EXPOSE 8888
 
 # ============ Install IPython notebook ================================================
 RUN apt-get install -y ipython ipython-notebook
+
+# ============ Add sudo command ========================================================
+RUN rm /etc/sudoers && apt-get install -y sudo && \
+echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # ============ Set some environmental vars and change user =============================
 USER docker
