@@ -9,7 +9,7 @@ build: ## Creates an image based using the Dockerfile.
 	docker build ./docker/ -t jmodelica:1.0
 .PHONY: build
 
-start: ## Starts the container in detached mode and with an ipython notebook server listening on port 8888.
+start: ## Starts the container in detached mode and exposes ipython notebook server listening on port 8888.
 	docker run -d -v $(shell pwd)/modelica:/home/docker/modelica \
 	-v $(shell pwd)/ipynotebooks:/home/docker/ipynotebooks \
 	-p 127.0.0.1:8888:8888 jmodelica:1.0 \
