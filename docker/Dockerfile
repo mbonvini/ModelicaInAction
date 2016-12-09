@@ -11,7 +11,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # =========== Basic Configuration ======================================================
 # Update the system
 RUN apt-get -y update \
-    && apt-get install -y build-essential git python python-dev \
+    && apt-get install -y sudo build-essential git python python-dev \
     python-setuptools make g++ cmake gfortran ipython swig ant python-numpy \
     python-scipy python-matplotlib cython python-lxml python-nose python-jpype \
     libboost-dev jcc git subversion wget zlib1g-dev pkg-config clang
@@ -75,7 +75,7 @@ RUN ../configure --prefix=/home/docker/installed/Ipopt \
 # Intall autoconf which is called by the casadi installation
 RUN apt-get install -y autoconf
 
-# Checkout the JModelica source code (tag 1.17)
+# Checkout the JModelica source code
 RUN mkdir -p /home/docker/installed/JModelica
 
 WORKDIR /home/docker/to_install
@@ -118,10 +118,6 @@ EXPOSE 8888
 
 # ============ Install IPython notebook ================================================
 RUN apt-get install -y ipython ipython-notebook
-
-# ============ Add sudo command ========================================================
-RUN rm /etc/sudoers && apt-get install -y sudo && \
-echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # ============ Set some environmental vars and change user =============================
 USER docker

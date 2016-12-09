@@ -5,3 +5,4 @@ ipynotebooks/.ipynb_checkpoints/*
 *.txt
 *.fmu
 *.c
+*.jmu

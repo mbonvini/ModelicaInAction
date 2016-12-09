@@ -5,21 +5,28 @@
 all:	help
 .PHONY: all
 
-build: ## Creates an image based using the Dockerfile.
-	docker build ./docker/ -t jmodelica:1.0
-.PHONY: build
+CONTAINER_NAME=modelicainaction/jmodelica
+VERSION=1.0
+
+build-image: ## Creates an image based using the Dockerfile.
+	docker build ./docker/ -t $(CONTAINER_NAME):$(VERSION)
+.PHONY: build-image
+
+download-image: ## Downloads the image from Dockerhub
+	docker pull $(CONTAINER_NAME)
+.PHONY: download-image
 
 start: ## Starts the container in detached mode and exposes ipython notebook server listening on port 8888.
 	docker run -d -v $(shell pwd)/modelica:/home/docker/modelica \
 	-v $(shell pwd)/ipynotebooks:/home/docker/ipynotebooks \
-	-p 127.0.0.1:8888:8888 jmodelica:1.0 \
+	-p 127.0.0.1:8888:8888 $(CONTAINER_NAME):$(VERSION) \
 	sh -c 'ipython notebook --no-browser --matplotlib=inline --ip=0.0.0.0 --port=8888 --notebook-dir=/home/docker/ipynotebooks'
 .PHONY: start
 
 start-i: ## Starts the container in interactive mode
 	docker run -t -i --rm -v $(shell pwd)/modelica:/home/docker/modelica \
 	-v $(shell pwd)/ipynotebooks:/home/docker/ipynotebooks \
-	jmodelica:1.0 /bin/bash
+	$(CONTAINER_NAME):$(VERSION) /bin/bash
 .PHONY: start-i
 
 remove-containers: ## Remove the containers with status = Exited
