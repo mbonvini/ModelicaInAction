@@ -70,12 +70,12 @@ RUN ../configure --prefix=/home/docker/installed/Ipopt \
     && make \
     && make install
 
-# ======== Start JModelica installation ===============================================
+# ======== Start JModelica.org installation ===========================================0
 
-# Intall autoconf which is called by the casadi installation
+# Intall autoconf which is called by the casADi installation
 RUN apt-get install -y autoconf
 
-# Checkout the JModelica source code
+# Checkout the JModelica.org source code
 RUN mkdir -p /home/docker/installed/JModelica
 
 WORKDIR /home/docker/to_install
