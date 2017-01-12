@@ -13,7 +13,7 @@ build-image: ## Creates an image based using the Dockerfile.
 .PHONY: build-image
 
 download-image: ## Downloads the image from Dockerhub
-	docker pull $(CONTAINER_NAME)
+	docker pull $(CONTAINER_NAME):$(VERSION)
 .PHONY: download-image
 
 start: ## Starts the container in detached mode and exposes ipython notebook server listening on port 8888.
