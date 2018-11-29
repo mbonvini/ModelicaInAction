@@ -24,15 +24,17 @@ package SimpleBuilding
             "Latitude of the location";
         constant Modelica.SIunits.Angle lon(unit="deg") = -122.431297
             "Longitude of the location";
-        parameter Modelica.SIunits.Time t0=8*3600
+        parameter Modelica.SIunits.Time TimeDay(unit="hour") = 8
             "Start time of the day-time set point schedule";
-        parameter Modelica.SIunits.Time t1=18*3600
+        parameter Modelica.SIunits.Time TimeNight(unit="hour") = 18
             "End time of the day-time set point schedule";
+        parameter Modelica.SIunits.Time RiseTime(unit="minute") = 30
+            "Time to for set point change";
         parameter Modelica.SIunits.Temp_C Tnight = 18
             "Temperature set point of the room during the night-time";
         parameter Modelica.SIunits.Temp_C Tday = 22
             "Temperature set point of the room during the day-time";
-        parameter Modelica.SIunits.Time tau = 10*60
+        parameter Modelica.SIunits.Time tau(unit="minute") = 10
             "Time constant for set point filter";
         parameter Real ACH(unit="m3/hour") = 2.5 "Air changes per hour";
 
@@ -72,15 +74,15 @@ package SimpleBuilding
         Modelica.Thermal.HeatTransfer.Sources.PrescribedTemperature TRoomControl;
         Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow solGainWal;
         Modelica.Thermal.HeatTransfer.Sources.PrescribedHeatFlow solGainWin;
-        Modelica.Blocks.Continuous.FirstOrder spFilter(y_start=Tnight, T=tau);
+        Modelica.Blocks.Continuous.FirstOrder spFilter(y_start=Tnight, T=tau*60);
         Modelica.Blocks.Sources.CombiTimeTable TSetPoint(
             tableOnFile=false,
             table=[
                 0, 273.15 + Tnight;
-                t0, 273.15 + Tnight;
-                t0+1, 273.15 + Tday;
-                t1, 273.15 + Tday;
-                t1+1, 273.15 + Tnight;
+                TimeDay*3600, 273.15 + Tnight;
+                TimeDay*3600 + RiseTime*60, 273.15 + Tday;
+                TimeNight*3600, 273.15 + Tday;
+                TimeNight*3600 + RiseTime*60, 273.15 + Tnight;
                 24*3600, 273.15 + Tnight],
             extrapolation=Modelica.Blocks.Types.Extrapolation.Periodic
         );
@@ -133,7 +135,7 @@ package SimpleBuilding
         for i in 1:n loop
             Twall[i] = wall.C[i].T - 273.25;
         end for;
-        Tsp = TSetPoint.y[1] - 273.15;
+        Tsp = spFilter.u - 273.15;
         Qheat = -min(TRoomControl.port.Q_flow, 0);
         Qcool = max(TRoomControl.port.Q_flow, 0);
         SolRadWall = solGainWal.Q_flow;
